@@ -1,16 +1,21 @@
 mod fragment;
 mod framebuffer;
 mod line;
+mod obj;
 mod triangle;
 
 use raylib::prelude::*;
 use framebuffer::Framebuffer;
+use obj::Obj;
 use triangle::{rasterize, Triangle, TriangleMode};
 
 const WIDTH: i32 = 800;
 const HEIGHT: i32 = 600;
 
 fn main() {
+    let model = Obj::load("models/nave.obj");
+    println!("Vertices: {}, triangulos: {}", model.vertices.len(), model.indices.len());
+
     let mut framebuffer = Framebuffer::new(WIDTH as u32, HEIGHT as u32, Color::BLACK);
 
     let triangles = vec![Triangle::new(
