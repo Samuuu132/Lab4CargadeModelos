@@ -60,5 +60,23 @@ fn main() {
     let triangles = model_triangles(&model, Color::WHITE);
 
     framebuffer.draw_fragments(&rasterize(&triangles, TriangleMode::Wireframe));
-    framebuffer.render_to_file("output.png");
+
+    std::fs::create_dir_all("images").expect("No se pudo crear la carpeta images");
+    framebuffer.render_to_file("images/nave.png");
+
+    let (mut rl, thread) = raylib::init()
+        .size(WIDTH, HEIGHT)
+        .title("Lab 4 - Carga de modelos")
+        .build();
+    rl.set_target_fps(60);
+
+    let texture = rl
+        .load_texture_from_image(&thread, &framebuffer.color_buffer)
+        .expect("No se pudo crear la textura");
+
+    while !rl.window_should_close() {
+        let mut d = rl.begin_drawing(&thread);
+        d.clear_background(Color::BLACK);
+        d.draw_texture(&texture, 0, 0, Color::WHITE);
+    }
 }
